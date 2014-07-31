@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'waggit'
+
+for arg in ARGV
+  puts "#{arg}"
+end
+
+cmd = ARGV[0].lower
+
+case
+
+when (cmd == "s" or cmd == "sync")
+  Waggit.sync
+when (cmd == "f" or cmd == "forcepush" or cmd == "fp")
+  Waggit.forcepush
+else
+  puts "Invalid command!"
+end
