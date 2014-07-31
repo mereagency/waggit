@@ -1,4 +1,4 @@
-require 'command'
+require 'command.rb'
 
 class Wagon
 

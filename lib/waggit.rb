@@ -1,6 +1,6 @@
-require 'git'
-require 'wagon'
-require 'bash'
+require 'git.rb'
+require 'wagon.rb'
+require 'files.rb'
 
 class Waggit
 
@@ -16,6 +16,7 @@ class Waggit
 
     puts Git.checkout_new_wagon
     puts Wagon.pull
+    Files.clean_scss
     #TODO: Be able to detect if any files were deleted remotely and delete them locally
     #TODO: Remove css files that have an scss equivalent
     #TODO: Checkout: http://stackoverflow.com/questions/3515597/git-add-only-non-whitespace-changes
@@ -32,9 +33,10 @@ class Waggit
 
     puts Git.checkout_new_local
     puts Git.stash_pop
+    Files.clean_scss
     puts Git.add_all
     puts "Enter a git commit comment:"
-    comment = gets.chomp
+    comment = $stdin.gets.chomp
     puts Git.commit(comment)
     puts Git.rebase_local
     puts Git.checkout_master

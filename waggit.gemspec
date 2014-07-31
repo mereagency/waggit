@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description  = "A way of integrating LocomotiveCMS/Wagon with git."
   s.authors = ["Mere Agency"]
   s.email = "support@mereagency"
-  s.files = ["lib/waggit.rb"]
+  s.files = ["lib/waggit.rb", "lib/git.rb", "lib/wagon.rb", "lib/command.rb", "lib/files.rb"]
   s.homepage = "http://rubygems.org/gems/waggit"
   s.platform = Gem::Platform::RUBY
   s.executables << 'waggit'

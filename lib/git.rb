@@ -1,7 +1,9 @@
-require 'command'
+require 'command.rb'
 
 class Git
 
+  @@wagon = "wagon-branch"
+  @@local = "local-branch"
   # Add all local changes to be committed.
   #
   def self.add_all()
@@ -35,11 +37,11 @@ class Git
   end
 
   def self.checkout_new_wagon()
-    self.checkout("-b wagon-banch")
+    self.checkout("-b #{@@wagon}")
   end
 
   def self.checkout_new_local()
-    self.checkout("-b local-branch")
+    self.checkout("-b #{@@local}")
   end
 
   def self.delete_branch(branch)
@@ -47,11 +49,11 @@ class Git
   end
 
   def self.delete_wagon()
-    self.delete_branch("wagon-branch")
+    self.delete_branch(@@wagon)
   end
 
   def self.delete_local()
-    self.delete_branch("local-branch")
+    self.delete_branch(@@local)
   end
 
   def self.stash()
@@ -67,11 +69,11 @@ class Git
   end
 
   def self.merge_wagon()
-    self.merge("wagon-branch")
+    self.merge(@@wagon)
   end
 
   def self.merge_local()
-    self.merge("local-branch")
+    self.merge(@@local)
   end
 
   def self.rebase(from, to)
@@ -79,11 +81,11 @@ class Git
   end
 
   def self.rebase_wagon()
-    self.rebase("master", "wagon-branch")
+    self.rebase("master", @@wagon)
   end
 
   def self.rebase_local()
-    self.rebase("master", "local-branch")
+    self.rebase("master", @@local)
   end
 
   def self.has_changes?()

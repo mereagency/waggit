@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 
-require 'waggit'
+require 'waggit.rb'
 
 for arg in ARGV
   puts "#{arg}"
 end
 
-cmd = ARGV[0].lower
+cmd = ARGV[0].downcase
 
 case
 
