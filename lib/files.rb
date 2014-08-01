@@ -8,7 +8,7 @@ class Files
   def self.clean_scss()
     Dir.glob('**/*.scss').each do|f|
       puts "Found scss file: #{f}."
-      f[".scss"] = ".css"
+      f.sub(".scss", '')
       puts "Searching for css file: #{f}."
       if File.file?(f)
         puts "CSS file found"

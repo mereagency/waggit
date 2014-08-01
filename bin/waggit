@@ -2,18 +2,23 @@
 
 require 'waggit.rb'
 
-for arg in ARGV
-  puts "#{arg}"
-end
-
 cmd = ARGV[0].downcase
 
-case
+for arg in ARGV
+  puts "arg: #{arg}"
+end
 
-when (cmd == "s" or cmd == "sync")
-  Waggit.sync
-when (cmd == "f" or cmd == "forcepush" or cmd == "fp")
-  Waggit.forcepush
+options = []
+if ARGV.length > 1
+  options = ARGV[1..(ARGV.length-1)]
+end
+
+
+case cmd
+when "s", "sync"
+  Waggit.sync(options)
+when "f", "forcepush", "fp"
+  Waggit.forcepush(options)
 else
   puts "Invalid command!"
 end

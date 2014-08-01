@@ -92,4 +92,8 @@ class Git
     return !!Command.run("git ls-files -m")
   end
 
+  def self.clean_whitespace_changes()
+  # git stash && git stash apply && git diff -w > ws.patch && git checkout . && git apply --ignore-space-change --ignore-whitespace ws.patch && rm ws.patch
+  end
+
 end
