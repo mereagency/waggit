@@ -10,8 +10,15 @@ class Git
     Command.run("git add -A .")
   end
 
-  # Git commit with commit message
+  # Git commit, will prompt user for commit message
   #
+  def self.commit_prompt()
+    puts "Enter a git commit message:"
+    message = $stdin.gets.chomp
+    self.commit(message)
+  end
+
+  # Git commit using provided message
   def self.commit(message)
     Command.run("git commit -m '#{message}'")
   end
@@ -94,6 +101,7 @@ class Git
 
   def self.clean_whitespace_changes()
   # git stash && git stash apply && git diff -w > ws.patch && git checkout . && git apply --ignore-space-change --ignore-whitespace ws.patch && rm ws.patch
+    puts "This does nothin yet"
   end
 
 end

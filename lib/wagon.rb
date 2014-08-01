@@ -15,16 +15,21 @@ class Wagon
         resource_opts.push("theme_assets")
       end
     end
-    return " -r resource_opts.join(' ')"
+    unless resource_opts.empty?
+      return " -r #{resource_opts.join(' ')}"
+    else
+      return ''
+    end
+
 
   end
 
   def self.pull(options)
-    Command.run("bundle exec wagon pull production#{self.process_options}")
+    Command.run("bundle exec wagon pull production#{self.process_options(options)}")
   end
 
   def self.push(options)
-    Command.run("bundle exec wagon push production#{self.process_options}")
+    Command.run("bundle exec wagon push production#{self.process_options(options)}")
   end
 
 end

@@ -10,23 +10,18 @@ class Waggit
     puts "test... doesn't work yet"
   end
 
+  def self.clean(options)
+    Files.clean_css
+  end
+
   def self.forcepush(options)
     puts Git.add_all
-    puts "Enter a git commit comment:"
-    comment = $stdin.gets.chomp
-    puts Git.commit(comment)
+    puts Git.commit_prompt
     puts Git.pull
     puts Git.push
     puts Wagon.push(options)
   end
 
-
-  # Optional parameters allow you to only sync certain resources.
-  # You can use multiple at a time.
-  # Current options:
-  # pages: true  syncs pages only
-  # theme_assets: true syncs theme_assets only
-  # no_options: true sync everything
   def self.sync(options)
     puts Git.checkout_master
     puts Git.delete_wagon
@@ -35,9 +30,7 @@ class Waggit
 
     puts Git.checkout_new_wagon
     puts Wagon.pull(options)
-    Files.clean_scss
     #TODO: Checkout: http://stackoverflow.com/questions/3515597/git-add-only-non-whitespace-changes
-
     if Git.has_changes?
       puts Git.add_all
       puts Git.commit "merge wagon pull"
@@ -50,16 +43,19 @@ class Waggit
 
     puts Git.checkout_new_local
     puts Git.stash_pop
-    Files.clean_scss
     puts Git.add_all
-    puts "Enter a git commit comment:"
-    comment = $stdin.gets.chomp
-    puts Git.commit(comment)
+    puts Git.commit_prompt
     puts Git.rebase_local
     puts Git.checkout_master
     puts Git.merge_local
     puts Git.delete_wagon
     puts Git.delete_local
+
+    Files.clean_css
+    if Git.has_changes?
+      puts Git.add_all
+      puts Git.commit "cleaned css"
+    end
 
     puts Git.pull
     puts Git.push
