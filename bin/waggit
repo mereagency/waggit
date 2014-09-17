@@ -21,6 +21,8 @@ when "f", "forcepush", "fp"
   Waggit.forcepush(options)
 when "p", "push"
   Waggit.push(options)
+when "pull"
+  Waggit.pull(options)
 when "c", "clean"
   Waggit.clean(options)
 else
