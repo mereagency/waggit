@@ -1,7 +1,7 @@
 
 # Handles all direct interaction with Bash
 #
-class Command
+module Command
 
   # Runs a command and returns the output
   #

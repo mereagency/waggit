@@ -1,6 +1,6 @@
 require 'command.rb'
 
-class Git
+module Git
 
   @@wagon = "wagon-branch"
   @@local = "local-branch"
