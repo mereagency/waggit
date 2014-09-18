@@ -1,4 +1,4 @@
-require 'command.rb'
+require 'command'
 
 module Git
 
@@ -104,4 +104,9 @@ module Git
     puts "This does nothin yet"
   end
 
+  # Return true if the current directory is in a git repo, otherwise false
+  #
+  def self.is_git_dir?()
+    return Command.run("git rev-parse", false)
+  end
 end

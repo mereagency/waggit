@@ -4,9 +4,9 @@ require 'waggit.rb'
 
 cmd = ARGV[0].downcase
 
-for arg in ARGV
-  puts "arg: #{arg}"
-end
+#for arg in ARGV
+  #puts "arg: #{arg}"
+#end
 
 options = []
 if ARGV.length > 1
@@ -19,12 +19,14 @@ when "s", "sync"
   Waggit.sync(options)
 when "f", "forcepush", "fp"
   Waggit.forcepush(options)
-when "p", "push"
+when "push"
   Waggit.push(options)
 when "pull"
   Waggit.pull(options)
 when "c", "clean"
   Waggit.clean(options)
+when "t", "test"
+  Waggit.test_dir(options)
 else
   puts "Invalid command!"
 end

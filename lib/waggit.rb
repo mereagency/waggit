@@ -1,122 +1,147 @@
-require 'git.rb'
-require 'wagon.rb'
-require 'files.rb'
+require 'git'
+require 'wagon'
+require 'files'
 
 module Waggit
 
   # Verifies that the current working directory is setup to work with both git and wagon
   #
-  def self.test()
-    puts "test... doesn't work yet"
+  def self.test_dir(options={})
+    test = true
+    if !Git.is_git_dir?
+      # FIXME: Cannot find a way to capture the output of the above git method, 
+      # so there is another error that is output: 'fatal: Not a git repository 
+      # (or any of the parent directories): .git'
+
+      #puts "fatal: not in a git directory."
+      test = false
+    end 
+    if !Wagon.is_wagon_dir?
+      puts "fatal: Not in a wagon directory."
+      test = false
+    end 
+    if test
+      puts "Current directory is both a wagon and a git directory"
+    end
+    return test
   end
 
-  def self.clean(options)
-    Files.clean_css
+  def self.clean(options={})
+    if test_dir
+      Files.clean_css
+    end
   end
 
   # Push local changes to wagon, ignoring git.
   #
   def self.forcepush(options)
-    Files.clean_css
-    puts Wagon.push(options)
+    if test_dir
+      Files.clean_css
+      Wagon.push(options)
+    end
   end
 
   # Commit local changes and keep in sync with git, then push to wagon.
   #
   def self.push(options)
-    puts Git.add_all
-    puts Git.commit_prompt
-    Files.clean_css
-    if Git.has_changes?
-      puts Git.add_all
-      puts Git.commit "cleaned css"
+    if test_dir
+      Git.add_all
+      Git.commit_prompt
+      Files.clean_css
+      if Git.has_changes?
+        Git.add_all
+        Git.commit "cleaned css"
+      end
+      Git.pull
+      Git.push
+      Wagon.push(options)
     end
-    puts Git.pull
-    puts Git.push
-    puts Wagon.push(options)
   end
 
   def self.pull(options)
-    begin
-      puts Git.checkout_master
-      puts Git.delete_wagon
-      puts Git.delete_local
-      puts Git.stash
+    if test_dir
+      begin
+        Git.checkout_master
+        Git.delete_wagon
+        Git.delete_local
+        Git.stash
 
-      puts Git.checkout_new_wagon
-      puts Wagon.pull(options)
-      #TODO: Checkout: http://stackoverflow.com/questions/3515597/git-add-only-non-whitespace-changes
-      if Git.has_changes?
-        puts Git.add_all
-        puts Git.commit "merge wagon pull"
+        Git.checkout_new_wagon
+        Wagon.pull(options)
+        #TODO: Checkout: http://stackoverflow.com/questions/3515597/git-add-only-non-whitespace-changes
+        if Git.has_changes?
+          Git.add_all
+          Git.commit "merge wagon pull"
+        end
+
+        Git.checkout_master
+        Git.rebase_wagon
+        Git.checkout_master
+        Git.merge_wagon
+
+        Git.checkout_new_local
+        Git.stash_pop
+        Git.add_all
+        Git.commit_prompt
+        Git.rebase_local
+        Git.checkout_master
+        Git.merge_local
+        Git.delete_wagon
+        Git.delete_local
+    	rescue Exception
+        "Pull aborted, switching back to master branch"
+        Git.checkout_master
+        raise
       end
-
-      puts Git.checkout_master
-      puts Git.rebase_wagon
-      puts Git.checkout_master
-      puts Git.merge_wagon
-
-      puts Git.checkout_new_local
-      puts Git.stash_pop
-      puts Git.add_all
-      puts Git.commit_prompt
-      puts Git.rebase_local
-      puts Git.checkout_master
-      puts Git.merge_local
-      puts Git.delete_wagon
-      puts Git.delete_local
-  	rescue Exception
-      puts "Pull aborted, switching back to master branch"
-      puts Git.checkout_master
-      raise
     end
-
   end
 
   def self.sync(options)
-    begin
-      puts Git.checkout_master
-      puts Git.delete_wagon
-      puts Git.delete_local
-      puts Git.stash
+    if test_dir
+      begin
+        Git.checkout_master
+        Git.delete_wagon
+        Git.delete_local
+        Git.stash
 
-      puts Git.checkout_new_wagon
-      puts Wagon.pull(options)
-      #TODO: Checkout: http://stackoverflow.com/questions/3515597/git-add-only-non-whitespace-changes
-      if Git.has_changes?
-        puts Git.add_all
-        puts Git.commit "merge wagon pull"
+        Git.checkout_new_wagon
+        Wagon.pull(options)
+        #TODO: Checkout: http://stackoverflow.com/questions/3515597/git-add-only-non-whitespace-changes
+        if Git.has_changes?
+          Git.add_all
+          Git.commit "merge wagon pull"
+        end
+
+        Git.checkout_master
+        Git.rebase_wagon
+        Git.checkout_master
+        Git.merge_wagon
+
+        Git.checkout_new_local
+        Git.stash_pop
+        Git.add_all
+        Git.commit_prompt
+        Git.rebase_local
+        Git.checkout_master
+        Git.merge_local
+        Git.delete_wagon
+        Git.delete_local
+
+        Files.clean_css
+        if Git.has_changes?
+          Git.add_all
+          Git.commit "cleaned css"
+        end
+
+        Git.pull
+        Git.push
+
+        Wagon.push(options)
+      rescue Exception
+        "Sync aborted, switching back to master branch"
+        Git.checkout_master
+        raise
       end
-
-      puts Git.checkout_master
-      puts Git.rebase_wagon
-      puts Git.checkout_master
-      puts Git.merge_wagon
-
-      puts Git.checkout_new_local
-      puts Git.stash_pop
-      puts Git.add_all
-      puts Git.commit_prompt
-      puts Git.rebase_local
-      puts Git.checkout_master
-      puts Git.merge_local
-      puts Git.delete_wagon
-      puts Git.delete_local
-
-      Files.clean_css
-      if Git.has_changes?
-        puts Git.add_all
-        puts Git.commit "cleaned css"
-      end
-
-      puts Git.pull
-      puts Git.push
-
-      puts Wagon.push(options)
-    rescue Exception
-      puts "Sync aborted, switching back to master branch"
-      puts Git.checkout_master
-      raise
     end
   end
 

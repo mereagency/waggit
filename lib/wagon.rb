@@ -52,8 +52,6 @@ module Wagon
     else
       return ''
     end
-
-
   end
 
   def self.pull(options)
@@ -63,5 +61,20 @@ module Wagon
   def self.push(options)
     Command.run("bundle exec wagon push production#{self.process_options(options)}")
   end
+
+
+  # FROM : https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/cli.rb#L8-L31
+  # Check if the path given in option ('.' by default) points to a LocomotiveCMS
+  # site. It is also possible to pass a path other than the one from the options.
+  #
+  # @param [ String ] path The optional path of the site instead of options['path']
+  #
+  # @return [ String ] The fullpath to the LocomotiveCMS site or nil if it is not a valid site.
+  #
+  def self.is_wagon_dir?(path = Dir.pwd)
+    path = path == '.' ? Dir.pwd : File.expand_path(path)
+    return  File.exists?(File.join(path, 'config', 'site.yml')) 
+  end
+
 
 end

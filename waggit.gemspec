@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name  = 'waggit'
-  s.version   = '0.0.008'
-  s.date  ='2014-08-29'
+  s.version   = '0.0.011'
+  s.date  ='2014-09-17'
   s.summary = 'Wagon + Git = :)'
   s.description  = "A way of integrating LocomotiveCMS/Wagon with git. This is under development and not ready for active use."
   s.authors = ["Mere Agency"]
