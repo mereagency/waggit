@@ -64,6 +64,7 @@ module Wagon
 
 
   # FROM : https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/cli.rb#L8-L31
+  # This method is heavily tweaked and may require more modifications to be acurate.
   # Check if the path given in option ('.' by default) points to a LocomotiveCMS
   # site. It is also possible to pass a path other than the one from the options.
   #
@@ -71,10 +72,27 @@ module Wagon
   #
   # @return [ String ] The fullpath to the LocomotiveCMS site or nil if it is not a valid site.
   #
-  def self.is_wagon_dir?(path = Dir.pwd)
+  def self.is_wagon_dir?(path = '.')
     path = path == '.' ? Dir.pwd : File.expand_path(path)
     return  File.exists?(File.join(path, 'config', 'site.yml')) 
   end
 
+  # Determines if there is a wagon path in the immediate directory or the directory above it. 
+  # If so, the path will be returned, otherwise nill. This does not search sub directories.
+  def self.get_wagon_path()
+    dir = nil
+    if is_wagon_dir? Dir.pwd
+      dir = Dir.pwd
+    else
+      require 'pathname'
+      Pathname.new(Dir.pwd).ascend do |parent|
+        if is_wagon_dir? parent
+          dir = parent.to_s
+          break
+        end
+      end
+    end
+    return dir
+  end
 
 end
