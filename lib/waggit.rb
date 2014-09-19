@@ -32,19 +32,20 @@ module Waggit
   #
   def self.get_waggit_dir()
     dir = Wagon.get_wagon_path
-    if !dir
-      puts "error: Unable to find a Wagon directory in your current path."
-    else
-    dir = Git.is_git_dir dir if dir
-    if !dir
-      puts "error: Wagon directory is not setup with git: #{dir}"
+    puts "error: Unable to find a Wagon directory in your current path." unless dir
+    if dir
+      dir = Git.is_git_dir?(dir) ? dir : nil
+      puts "error: Wagon directory is not setup with git: #{dir}" unless dir
     end
     return dir
   end
 
   def self.clean(options={})
-    if test_dir
-      Files.clean_css
+    dir = get_waggit_dir
+    if dir
+      Dir.chdir(dir) do 
+        Files.clean_css
+      end
     end
   end
 

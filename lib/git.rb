@@ -104,9 +104,11 @@ module Git
     puts "This does nothin yet"
   end
 
-  # Return true if the current directory is in a git repo, otherwise false
+  # Return true if the provided directory is in a git repo, otherwise false. Can optionally provide wa
   #
-  def self.is_git_dir?()
-    return Command.run("git rev-parse", false)
+  def self.is_git_dir?(dir = Dir.pwd)
+      return Dir.chdir dir do 
+        return Command.run("git rev-parse", false)
+      end
   end
 end
