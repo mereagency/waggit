@@ -52,11 +52,13 @@ module Waggit
   # Push local changes to wagon, ignoring git.
   #
   def self.forcepush(options)
-    dir = get_waggit_dir
-    if dir
-      Dir.chdir(dir) do 
-        Files.clean_css
-        Wagon.push(options)
+    if confirm_push
+      dir = get_waggit_dir
+      if dir
+        Dir.chdir(dir) do 
+          Files.clean_css
+          Wagon.push(options)
+        end
       end
     end
   end
@@ -64,19 +66,21 @@ module Waggit
   # Commit local changes and keep in sync with git, then push to wagon.
   #
   def self.push(options)
-    dir = get_waggit_dir
-    if dir
-      Dir.chdir(dir) do 
-        Git.add_all
-        Git.commit_prompt
-        Files.clean_css
-        if Git.has_changes?
+    if confirm_push
+      dir = get_waggit_dir
+      if dir
+        Dir.chdir(dir) do 
           Git.add_all
-          Git.commit "cleaned css"
+          Git.commit_prompt
+          Files.clean_css
+          if Git.has_changes?
+            Git.add_all
+            Git.commit "cleaned css"
+          end
+          Git.pull
+          Git.push
+          Wagon.push(options)
         end
-        Git.pull
-        Git.push
-        Wagon.push(options)
       end
     end
   end
@@ -114,7 +118,7 @@ module Waggit
           Git.delete_wagon
           Git.delete_local
       	rescue Exception
-          "Pull aborted, switching back to master branch"
+          puts "Pull aborted, switching back to master branch"
           Git.checkout_master
           raise
         end
@@ -166,10 +170,31 @@ module Waggit
 
           Wagon.push(options)
         rescue Exception
-          "Sync aborted, switching back to master branch"
+          puts "Sync aborted, switching back to master branch"
           Git.checkout_master
           raise
         end
+      end
+    end
+  end
+
+  # Since pushing local content can overwrite remote content
+  # we want the user to confirm the operation
+  #
+  def self.confirm_push()
+    puts "Performing this operation will overwrite content on the server."
+    response = nil
+    while response.nil?
+      puts "Do you want to continue? [y/n]"
+      response = $stdin.gets.chomp.downcase
+      case response
+      when "y", "yes"
+        return true
+      when "n", "no"
+        return false
+      else
+        puts "Invalid response! Plese try again."
+        response = nil
       end
     end
   end

@@ -13,6 +13,7 @@ module Git
   # Git commit, will prompt user for commit message
   #
   def self.commit_prompt()
+    return unless has_changes?
     puts "Enter a git commit message:"
     message = $stdin.gets.chomp
     self.commit(message)
