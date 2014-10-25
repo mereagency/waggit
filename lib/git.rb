@@ -23,13 +23,13 @@ module Waggit
 
     # Git commit using provided message
     def self.commit(message)
-      Command.run("git commit -m '#{message}'")
+      raise GitCommitException unless Command.run("git commit -m '#{message}'")
     end
 
     # Git push
     #
     def self.push()
-      Command.run("git push")
+      raise GitPushException unless Command.run("git push")
     end
 
     # Git pull
@@ -55,7 +55,7 @@ module Waggit
     end
 
     def self.delete_branch(branch)
-      Command.run("git branch -D #{branch}")
+      raise GitDeleteBranchException unless Command.run("git branch -D #{branch}")
     end
 
     def self.delete_wagon()
@@ -67,15 +67,15 @@ module Waggit
     end
 
     def self.stash()
-      Command.run("git stash")
+      raise GitStashException unless Command.run("git stash")
     end
 
     def self.stash_pop()
-      Command.run("git stash pop")
+      raise GitPopException unless Command.run("git stash pop")
     end
 
     def self.merge(branch)
-      Command.run("git merge #{branch}")
+      raise GitMergeException unless Command.run("git merge #{branch}")
     end
 
     def self.merge_wagon()
@@ -87,7 +87,7 @@ module Waggit
     end
 
     def self.rebase(from, to)
-      Command.run("git rebase #{} #{}")
+      raise GitRebaseException unless Command.run("git rebase #{} #{}")
     end
 
     def self.rebase_wagon()

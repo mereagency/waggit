@@ -117,7 +117,8 @@ module Waggit
           Git.merge_local
           Git.delete_wagon
           Git.delete_local
-      	rescue WaggitException
+      	rescue WaggitException => e 
+          puts e.message
           puts "Pull aborted, switching back to master branch"
           Git.checkout_master
           raise
@@ -169,7 +170,8 @@ module Waggit
           Git.push
 
           Wagon.push(options)
-        rescue Exception
+        rescue WaggitException => e 
+          puts e.message
           puts "Sync aborted, switching back to master branch"
           Git.checkout_master
           raise
