@@ -1,22 +1,32 @@
 module Waggit
   class WaggitException < Exception
-    attr_reader :msg
-
-    def message
-      return @msg
+    def initialize(message = "Error performing a waggit operation")
+      super(message)
     end
-
   end
   class GitException < WaggitException
-    @msg = "Git Exception."
+    def initialize(message = "Error performing a git operation")
+      super(message)
+    end
   end
   class GitMergeException < GitException
-    @msg = "Error performing 'git merge'."
+    def initialize(message = "Error performing'git merge'")
+      super(message)
+    end
   end
   class GitCheckoutException < GitException
-    @msg = "Error performing 'git checkout'."
+    def initialize(message = "Error performing 'git checkout'") 
+      super(message)
+    end
   end
   class GitPullException < GitException
-    @msg = "Error performing 'git pull'."
+    def initialize(message = "Error performing 'git pull'") 
+      super(message)
+    end
+  end
+  class GitAddException < GitException
+    def initialize(message = "Error performing 'git add'") 
+      super(message)
+    end
   end
 end

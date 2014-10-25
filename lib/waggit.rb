@@ -1,7 +1,6 @@
-require 'git'
-require 'wagon'
-require 'files'
-require 'exceptions'
+require './git'
+require './wagon'
+require './files'
 
 module Waggit
 
