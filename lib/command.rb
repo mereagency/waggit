@@ -1,7 +1,7 @@
 
 # Handles all direct interaction with Bash
 #
-module Command
+module Waggit::Command
 
   # Runs a command and passes output to standard out, 
   # and returns the result

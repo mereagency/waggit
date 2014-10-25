@@ -1,6 +1,6 @@
-require 'command.rb'
+require 'command'
 
-module Wagon
+module Waggit::Wagon
 
   # Converts the provided options into the appropriate
   # string to append to the wagon command. 

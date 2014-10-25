@@ -1,6 +1,6 @@
 # Helper class for manipulating file system
 #
-module Files
+module Waggit::Files
 
   # If we have scss files that we edit, their compiled css equivalents need
   # to be deleted in order for wagon to recompile the scss

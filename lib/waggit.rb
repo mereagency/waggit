@@ -1,6 +1,7 @@
 require 'git'
 require 'wagon'
 require 'files'
+require 'exceptions'
 
 module Waggit
 
@@ -117,7 +118,7 @@ module Waggit
           Git.merge_local
           Git.delete_wagon
           Git.delete_local
-      	rescue Exception
+      	rescue WaggitException
           puts "Pull aborted, switching back to master branch"
           Git.checkout_master
           raise

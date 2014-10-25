@@ -1,6 +1,7 @@
 require 'command'
+require 'exceptions'
 
-module Git
+module Waggit::Git
 
   @@wagon = "wagon-branch"
   @@local = "local-branch"
@@ -33,11 +34,11 @@ module Git
   # Git pull
   #
   def self.pull()
-    Command.run("git pull")
+    raise GitPullException unless Command.run("git pull")
   end
 
   def self.checkout(branch)
-    Command.run("git checkout #{branch}")
+    raise GitCheckoutException unless Command.run("git checkout #{branch}")
   end
 
   def self.checkout_master()
