@@ -1,6 +1,6 @@
-require './git'
-require './wagon'
-require './files'
+require 'git'
+require 'wagon'
+require 'files'
 
 module Waggit
 
@@ -60,6 +60,27 @@ module Waggit
           Wagon.push(options)
         end
       end
+    end
+  end
+
+  def self.push_page(options)
+
+
+    #if confirm_push
+    # TODO: Possible options to include:
+    # -a, absolute path to file, use instead of default relative path
+    # *, push all pages in current dir
+    # -r, push all pages, and all descendents in current dir.
+    #filepath = options[1]
+    # The default option is that the filepath they passed in is relative to 
+    # the crurrent working directory.
+    #path = File.join(Dir.pwd, filepath)
+    #fail Wagon::WagonException("Failed in 'push_page'. "\
+    #  "Unable to locate file: #{path}") unless File.exist?(path)
+     
+    #Wagon.
+
+
     end
   end
 

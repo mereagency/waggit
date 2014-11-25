@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'waggit.rb'
+require 'waggit'
 
 cmd = ARGV[0].downcase
 
@@ -8,25 +8,27 @@ cmd = ARGV[0].downcase
   #puts "arg: #{arg}"
 #end
 
-options = []
-if ARGV.length > 1
-  options = ARGV[1..(ARGV.length-1)]
-end
+#options = []
+#if ARGV.length > 1
+#  options = ARGV[1..(ARGV.length-1)]
+#end
 
 
 case cmd
 when "s", "sync"
-  Waggit.sync(options)
+  Waggit.sync(ARGV)
 when "f", "forcepush", "fp"
-  Waggit.forcepush(options)
+  Waggit.forcepush(ARGV)
 when "push"
-  Waggit.push(options)
+  Waggit.push(ARGV)
 when "pull"
-  Waggit.pull(options)
+  Waggit.pull(ARGV)
 when "c", "clean"
-  Waggit.clean(options)
+  Waggit.clean(ARGV)
 when "t", "test"
-  Waggit.test_dir(options)
+  Waggit.test_dir(ARGV)
+when "push_page"
+  Waggit.push_page(ARGV)
 else
   puts "Invalid command!"
 end

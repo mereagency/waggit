@@ -1,0 +1,19 @@
+---
+title: Home page
+listed: true
+published: true
+cache_strategy: none
+response_type: text/html
+position: 0
+---
+<html>
+  <head>
+  </head>
+  <body>
+  {% block 'title' %}<h1>{{page.title}}</h1>{% endblock %}
+
+  {% block 'body' %}
+
+  {% endblock %}
+  <body>
+</html>

@@ -1,5 +1,5 @@
-require './command'
-require './exceptions'
+require 'command'
+require 'exceptions'
 
 module Waggit
   module Git
@@ -9,7 +9,7 @@ module Waggit
     # Add all local changes to be committed.
     #
     def self.add_all()
-      raise GitAddException unless Command.run("git add -A .")
+      Command.run("git add -A .")
     end
 
     # Git commit, will prompt user for commit message
@@ -54,16 +54,20 @@ module Waggit
       self.checkout("-b #{@@local}")
     end
 
+    def self.branch_exists?(branch)
+      Command.run("git show-ref --verify --quiet refs/heads/#{branch}")
+    end
+
     def self.delete_branch(branch)
       raise GitDeleteBranchException unless Command.run("git branch -D #{branch}")
     end
 
     def self.delete_wagon()
-      self.delete_branch(@@wagon)
+      self.delete_branch(@@wagon) if branch_exists? @@wagon
     end
 
     def self.delete_local()
-      self.delete_branch(@@local)
+      self.delete_branch(@@local) if branch_exists? @@local
     end
 
     def self.stash()
@@ -71,7 +75,7 @@ module Waggit
     end
 
     def self.stash_pop()
-      raise GitPopException unless Command.run("git stash pop")
+      raise GitStashPopException unless Command.run("git stash pop")
     end
 
     def self.merge(branch)

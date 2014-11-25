@@ -1,0 +1,15 @@
+#development:
+#  host: dev.example.com
+#  email: john@doe.net
+#  password: apassword
+  # api_key: <your api key here>
+#staging:
+#  host: staging.example.com
+#  email: john@doe.net
+#  password: apassword
+  # api_key: <your api key here>
+production:
+  host: http://localhost:8080
+  email: test.waggit@gmail.com
+  password: test.password
+  api_key: 068ea9b0183816c25c000209688227bca53569b4

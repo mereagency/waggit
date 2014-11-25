@@ -1,7 +1,22 @@
-require './command'
+require_relative '../lib/command.rb'
+require 'yaml'
+require 'pathname'
+require 'json'
+require 'httparty'
 
 module Waggit
+  # Wrapper module for `wagon` commands. This contains all wagon methods and 
+  # classes. 
+  #
   module Wagon
+    #TODO: make this an option to the user on the command line 
+    # params and as a persistent setting.
+    @@environment_name = "production" 
+
+    def self.environment_name
+      @@environment_name
+    end
+
     # Converts the provided options into the appropriate
     # string to append to the wagon command. 
     # Supported options:
@@ -55,13 +70,26 @@ module Waggit
     end
 
     def self.pull(options)
-      Command.run("bundle exec wagon pull production#{self.process_options(options)}")
+      Command.run("bundle exec wagon pull #{@@environment_name}#{self.process_options(options)}")
     end
 
     def self.push(options)
-      Command.run("bundle exec wagon push production#{self.process_options(options)}")
+      Command.run("bundle exec wagon push #{@@environment_name}#{self.process_options(options)}")
     end
 
+    def self.push_page(page)
+      # Pushes the state of the page up to the server. This requires that the
+      # page have it's id set to uniquely identify it.
+      fail WagonException("Tried to push page '#{page.fullpath}', but no id was set") unless page.id
+
+      url = "#{environment['host']}/locomotive/api/pages/#{page.id}/.json?auth_token=#{token}"
+
+      response = HTTParty.put(url, data)
+
+      #curl -X PUT -d 'site[name]=TEST' 'http://<your site>/locomotive/api/current_site.json?auth_token=K9zm8niKTxuM4ZMNK7Ct'
+
+      #curl -X POST -d 'page[title]=Hello world&page[slug]=hello-world&page[parent_fullpath]=index&page[raw_template]=Built with the API&page[listed]=true&page[published]=true' 'http://<your site>/locomotive/api/current_site.json?auth_token=K9zm8niKTxuM4ZMNK7Ct'
+    end
 
     # FROM : https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/cli.rb#L8-L31
     # This method is heavily tweaked and may require more modifications to be acurate.
@@ -79,12 +107,11 @@ module Waggit
 
     # Determines if there is a wagon path in the immediate directory or the directory above it. 
     # If so, the path will be returned, otherwise nill. This does not search sub directories.
-    def self.get_wagon_path()
+    def self.get_wagon_path
       dir = nil
       if is_wagon_dir? Dir.pwd
         dir = Dir.pwd
       else
-        require 'pathname'
         Pathname.new(Dir.pwd).ascend do |parent|
           if is_wagon_dir? parent
             dir = parent.to_s
@@ -93,6 +120,31 @@ module Waggit
         end
       end
       return dir
+    end
+
+    def self.get_site_file
+      path = get_wagon_path
+      File.join(path, 'config', 'site.yml') if path
+    end
+
+    def self.get_deploy_file
+      path = get_wagon_path
+      File.join(path, 'config', 'deploy.yml') if path
+    end
+
+    def self.get_pages_dir
+      path = get_wagon_path
+      File.join(path, 'app', 'views', 'pages') if path
+    end
+
+    def self.get_index_page_file
+      path = get_pages_dir
+      File.join(path, 'index.liquid') if path
+    end
+
+    def self.get_404_page_file
+      path = get_pages_dir
+      File.join(path, '404.liquid') if path
     end
   end
 end
